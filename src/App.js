@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import Ticker from './components/Ticker';
-import SignIn from './components/SignIn';
+//import SignIn from './components/SignIn';
 //import fire from './firebase';
 import firebase from './firebase';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import currencies from './currencies';
+import './App.css';
 
 const uiConfig = {
   // Popup signin flow rather than redirect flow.
@@ -32,13 +33,11 @@ class App extends Component {
 
   }
 
-componentDidMount() {
-
-
+componentDidMount=()=> {
   firebase.auth().onAuthStateChanged(user=> {
-    this.setState({isSignedIn:!!user})
+    this.setState({isSignedIn: !!user})
   })
-
+}
 
 
 //  firebase.ref().on('value', (snapshot)=> {
@@ -47,7 +46,7 @@ componentDidMount() {
 //              data: 20
 //    })
 //  });
-}
+
 
 //handleSubmit(event) {
   
@@ -59,7 +58,7 @@ componentDidMount() {
 //    newData: newData
 //  });
 
-handleCheckBox=(currency) => (event) => {
+handleCheckBox= currency => (event) => {
   const {checked}=event.target;
 
   this.setState(({ selectedPairs }) => {
@@ -68,23 +67,28 @@ handleCheckBox=(currency) => (event) => {
   
 
     if (checked) {
-      pairs.push(currency)
+      pairs.push(currency);
     } else {
-      
+      pairs=pairs.filter(pair=> pair !==currency)
     }
 
     return {
-      selectedPairs: ['btc-usd']
+      selectedPairs: pairs
     }
     
   })
 }
 
+
   render() {
     return (
       <div className="App">
       <div>{this.state.isSignedIn ? (
+        <span>
           <div>Signed In!</div>
+          
+          <button onClick={()=>firebase.auth().signOut}>Sign Out</button>
+        </span>  
           ) : (
             <div>Not Signed In!</div>
 
@@ -92,10 +96,12 @@ handleCheckBox=(currency) => (event) => {
       
         <pre className="App--Data">{JSON.stringify(this.state.data, null, 2)}</pre>
         <Ticker price={0.75} pair="BTC/USD" />
-        <SignIn/>
+       
         <aside>
             <ul className="currList">
-              {currencies.map(curr=> <li key={curr} className="currItem"><input type="checkbox" id={curr} onChange={this.handleCheckBox}/><label htmlFor={curr}>{curr.toUpperCase()}</label>
+              {currencies.map(curr=> <li key={curr} className="currItem">
+              <input type="checkbox" id={curr} onChange={this.handleCheckBox(curr)}/>
+              <label htmlFor={curr}>{curr.toUpperCase()}</label>
               </li>)}
             </ul>
           </aside>
@@ -111,3 +117,6 @@ handleCheckBox=(currency) => (event) => {
 }
 
 export default App;
+
+
+// <SignIn/>
