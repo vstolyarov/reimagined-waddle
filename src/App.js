@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import Ticker from './components/Ticker';
 //import SignIn from './components/SignIn';
 //import fire from './firebase';
-import firebase from './firebase';
+import {firebase, googleAuth} from './firebase';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import currencies from './currencies';
 import './App.css';
+
 
 const uiConfig = {
   // Popup signin flow rather than redirect flow.
@@ -19,7 +20,7 @@ const uiConfig = {
     firebase.auth.FacebookAuthProvider.PROVIDER_ID
   ]
 };
-
+//var provider = new firebase.auth.GoogleAuthProvider();    
 class App extends Component {
   constructor(props) {
     super(props);
@@ -30,6 +31,8 @@ class App extends Component {
       selectedPairs: []
     };
 
+   
+
 
   }
 
@@ -37,6 +40,8 @@ componentDidMount=()=> {
   firebase.auth().onAuthStateChanged(user=> {
     this.setState({isSignedIn: !!user})
   })
+
+  
 }
 
 
@@ -57,6 +62,13 @@ componentDidMount=()=> {
 //  this.setState({
 //    newData: newData
 //  });
+signIn = () => {
+  firebase.auth().signInWithPopup(googleAuth)
+}
+
+signOut = () => {
+  firebase.auth().signOut()
+}
 
 handleCheckBox= currency => (event) => {
   const {checked}=event.target;
@@ -88,12 +100,17 @@ handleCheckBox= currency => (event) => {
           <div>Signed In!</div>
           
           <button onClick={()=>firebase.auth().signOut}>Sign Out</button>
+          <h1>Welcome {firebase.auth().currentUser.displayName}</h1>
+<img alt="profile picture" src={firebase.auth().currentUser.photoURL}/>
         </span>  
           ) : (
             <div>Not Signed In!</div>
-
+            
+            
+            
           )}</div>
-      
+      <button onClick={this.signIn}>LOGIN With GOOGLE</button>
+      <button onClick={this.signOut}>LOG OFF</button>
         <pre className="App--Data">{JSON.stringify(this.state.data, null, 2)}</pre>
         <Ticker price={0.75} pair="BTC/USD" />
        

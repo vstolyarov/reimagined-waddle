@@ -1,6 +1,6 @@
 //<script src="https://www.gstatic.com/firebasejs/5.5.0/firebase.js"></script>
   // Initialize Firebase
-import firebase from 'firebase';
+import * as firebase from 'firebase';
 const config = {
     apiKey: "AIzaSyDoWMIXcuZgNnjglM3WYX-r6HkbOLTGEXA",
     authDomain: "test-51a69.firebaseapp.com",
@@ -11,7 +11,11 @@ const config = {
   };
 
 
-const fire = firebase.initializeApp(config);
-export default firebase;
+firebase.initializeApp(config);
 
+const firebaseDB=firebase.database();
+const googleAuth=new firebase.auth.GoogleAuthProvider();
+export {firebase,
+        firebaseDB,
+        googleAuth};
 

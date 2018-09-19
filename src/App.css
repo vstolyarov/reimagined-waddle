@@ -24,3 +24,8 @@ main {
   flex-wrap: wrap;
   flex: 1;
 }
+
+img {
+  height: 60px;
+  width: 60px;
+}
